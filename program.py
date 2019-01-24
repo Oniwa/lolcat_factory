@@ -1,4 +1,6 @@
-import os
+import os  # TODO: Switch to pathlib for path stuff and things
+import platform
+import subprocess
 
 import cat_service
 
@@ -9,8 +11,7 @@ def main():
     folder = get_or_create_output_folder()
     print(f'Found or created {folder}')
     download_cats(folder)
-    # download cats
-    # display cats
+    display_cats(folder)
 
 
 def print_header():
@@ -41,6 +42,21 @@ def download_cats(folder):
         cat_service.get_cat(folder, name)
 
     print('Done')
+
+
+def display_cats(folder):
+    print('Displaying cats in OS window.')
+    operating_system = platform.system()
+    if operating_system == 'Darwin':
+        subprocess.call(['open', folder])
+    elif operating_system == 'Windows':
+        folder = os.path.abspath(folder)
+        subprocess.call(['explorer', folder])
+    elif operating_system == 'Linux':
+        subprocess.call(['xgd-open', folder])
+    else:
+        print(f"We don't support your os: {operating_system}")
+
 
 if __name__ == '__main__':
     main()
